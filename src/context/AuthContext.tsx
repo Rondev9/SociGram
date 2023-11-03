@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const currentAccount = await getCurrentUser();
 
-      if (currentAccount) {
+      if (currentAccount !== undefined) {
         setUser({
           id: currentAccount.$id,
           name: currentAccount.name,
@@ -46,10 +46,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setIsAuthenticated(true);
         return true;
+      } else {
+        throw Error;
       }
-      return false;
     } catch (error) {
-      console.log(error);
+      console.log("innn error");
       return false;
     } finally {
       setIsLoading(false);
@@ -60,7 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const cookieFallback = localStorage.getItem("cookieFallback");
 
     if (
-      cookieFallback === "[]" || cookieFallback === null
+      cookieFallback === "[]" ||
+      cookieFallback?.length === 2 ||
+      cookieFallback === null
     ) {
       navigate("/sign-in");
     }
