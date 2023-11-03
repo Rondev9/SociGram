@@ -238,6 +238,7 @@
   /* Topbar */
   .topbar {
     @apply sticky top-0 z-50 md:hidden bg-dark-2 w-full;
+    /* @apply sticky top-0 z-50 bg-dark-2 w-full; */
   }
 
   /* User card */

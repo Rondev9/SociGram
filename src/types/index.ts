@@ -12,7 +12,7 @@ export type INavLink = {
   route: string;
   label: string;
 };
-
+ 
 export type IUpdateUser = {
   userId: string;
   name: string;
