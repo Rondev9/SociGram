@@ -5,7 +5,6 @@ import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
 import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
-import { isExternal } from "util/types";
 
 const LeftSidebar = () => {
   const { pathname } = useLocation();
