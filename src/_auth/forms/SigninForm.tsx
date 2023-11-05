@@ -42,7 +42,7 @@ const SigninForm = () => {
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // console.log(values);
 
     const session = await signInAccount({
       email: values.email,
