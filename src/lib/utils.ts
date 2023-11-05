@@ -1,9 +1,11 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
- 
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export function getRelativeTime(timestamp: string) {
   const currentDate = new Date();
@@ -18,8 +20,8 @@ export function getRelativeTime(timestamp: string) {
 
   if (weeks > 4) {
     // More than a month, return the full date
-    return inputDate.toLocaleDateString("en-IN");;
-  } else if(days > 7) {
+    return inputDate.toLocaleDateString("en-IN");
+  } else if (days > 7) {
     return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
   } else if (days > 0) {
     return `${days} day${days > 1 ? "s" : ""} ago`;
@@ -33,3 +35,7 @@ export function getRelativeTime(timestamp: string) {
     return "just now";
   }
 }
+
+export const checkIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};
