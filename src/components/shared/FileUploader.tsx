@@ -5,11 +5,25 @@ import { Button } from "../ui/button";
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
   mediaUrl: string;
+  isVideo: boolean;
 };
 
-const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
+const FileUploader = ({
+  fieldChange,
+  mediaUrl,
+  isVideo,
+}: FileUploaderProps) => {
   const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState("");
+  let [fileUrl, setFileUrl] = useState(mediaUrl);
+
+  let modifiedVideoUrl = "";
+  if (isVideo) {
+    modifiedVideoUrl =
+      mediaUrl.replace(/\/preview\?[^/]+/, "/view") +
+      "?project=654288d943ac85d3021e&mode=admin";
+    [fileUrl, setFileUrl] = useState(modifiedVideoUrl);
+  }
+
   const [fileType, setFileType] = useState("");
 
   const onDrop = useCallback(
@@ -22,7 +36,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
     },
     [file]
   );
-  console.log("fileUrl: ", fileUrl);
+  //   console.log("fileUrl: ", fileUrl);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -39,24 +53,25 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
       {fileUrl ? (
         <div>
           <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
-            {fileType.startsWith("image") ? (
-              <img src={fileUrl} alt="image" className="file_uploader-img" />
-            ) : (
+            {fileType.startsWith("video") || isVideo ? (
               // if it's a video
               <video width="320" height="240" controls>
                 <source src={fileUrl} type={fileType} />
                 Oops! Your browser does not support the video preview.
               </video>
+            ) : (
+              <img src={fileUrl} alt="image" className="file_uploader-img" />
             )}
           </div>
           <div>
-            {fileType.startsWith("image") ? (
+            {fileType.startsWith("video") || isVideo ? (
+              // if it's a video
               <p className="file_uploader-label">
-                Click or drag image to replace
+                Click or drag video to replace
               </p>
             ) : (
               <p className="file_uploader-label">
-                Click or drag video to replace
+                Click or drag image to replace
               </p>
             )}
           </div>

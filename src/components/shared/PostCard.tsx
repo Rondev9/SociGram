@@ -72,7 +72,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
   const { user } = useUserContext();
 
-  console.log("post deta:", post);
+//   console.log("post deta:", post);
 
   if (!post.creator) return;
 
@@ -157,7 +157,7 @@ const PostCard = ({ post }: PostCardProps) => {
         )}
       </Link>
 
-      <PostStats post={post} user={user.id} />
+      <PostStats post={post} userId={user.id} />
     </div>
   );
 };

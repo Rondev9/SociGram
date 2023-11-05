@@ -24,9 +24,10 @@ import Loader from "@/components/shared/Loader";
 
 type PostFormProps = {
   post?: Models.Document;
+  action: 'Create' | 'Update';
 };
 
-const PostForm = ({ post }: PostFormProps) => {
+const PostForm = ({ post, action }: PostFormProps) => {
   const { mutateAsync: createPost, isPending: isLoadingCreate } =
     useCreatePost();
   const { user } = useUserContext();
@@ -94,6 +95,7 @@ const PostForm = ({ post }: PostFormProps) => {
                 <FileUploader
                   fieldChange={field.onChange}
                   mediaUrl={post?.imageUrl}
+                  isVideo={post?.isVideo}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />

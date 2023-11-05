@@ -82,11 +82,9 @@ export async function getCurrentUser() {
 }
 
 export async function signOutAccount() {
-  const navigate = useNavigate();
   try {
     const session = await account.deleteSession("current");
-    console.log("session:", session);
-    navigate("/sign-in");
+    // console.log("session:", session);
     return session;
   } catch (error) {
     console.log(error);
@@ -246,6 +244,20 @@ export async function deleteSavedPost(savedRecordId: string) {
     if (!statusCode) throw Error;
 
     return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPostById(postId: string) {
+  try {
+    const post = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      postId
+    );
+
+    return post;
   } catch (error) {
     console.log(error);
   }
