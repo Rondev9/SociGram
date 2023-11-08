@@ -36,7 +36,7 @@ const FileUploader = ({
     },
     [file]
   );
-  //   console.log("fileUrl: ", fileUrl);
+    // console.log("fileUrl: ", fileUrl);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -55,7 +55,7 @@ const FileUploader = ({
           <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
             {fileType.startsWith("video") || isVideo ? (
               // if it's a video
-              <video width="320" height="240" controls>
+              <video width="320" height="240" controls muted>
                 <source src={fileUrl} type={fileType} />
                 Oops! Your browser does not support the video preview.
               </video>
