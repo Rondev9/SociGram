@@ -1,4 +1,4 @@
-import { INewPost, INewUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { useNavigate } from "react-router-dom";
@@ -96,17 +96,17 @@ export async function createPost(post: INewPost) {
     //Upload image to storage
     const uploadedFile = await uploadFile(post.file[0]);
 
-    console.log(post.file[0].type);
+    // console.log(post.file[0].type);
 
-    if (post.file[0].type.startsWith("video")) {
-      console.log("it's a video");
-    }
+    // if (post.file[0].type.startsWith("video")) {
+    //   console.log("it's a video");
+    // }
 
     if (!uploadedFile) throw Error;
 
     const fileUrl = getFilePreview(uploadedFile.$id);
 
-    console.log({ fileUrl });
+    // console.log({ fileUrl });
 
     if (!fileUrl) {
       deleteFile(uploadedFile.$id);
@@ -131,7 +131,7 @@ export async function createPost(post: INewPost) {
         isVideo: post.file[0].type.startsWith("video") ? true : false,
       }
     );
-    console.log("post det:", newPost);
+    // console.log("post det:", newPost);
     if (!newPost) {
       await deleteFile(uploadedFile.$id);
       throw Error;
@@ -258,6 +258,105 @@ export async function getPostById(postId: string) {
     );
 
     return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updatePost(post: IUpdatePost) {
+  const hasFileToUpdate = post.file.length > 0;
+
+  try {
+    let image = {
+      imageUrl: post.imageUrl,
+      imageId: post.imageId,
+    };
+    // console.log("has file to update:", hasFileToUpdate);
+    if (hasFileToUpdate) {
+      //Upload image to storage
+      const uploadedFile = await uploadFile(post.file[0]);
+
+      // console.log(post.file[0].type);
+      // console.log("uploaded file:", uploadedFile);
+
+      // if (post.file[0].type.startsWith("video")) {
+      //   console.log("it's a video");
+      // }
+
+      if (!uploadedFile) throw Error;
+
+      const fileUrl = getFilePreview(uploadedFile.$id);
+
+      // console.log({ fileUrl });
+
+      if (!fileUrl) {
+        deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+
+    //Converting tags into an array
+    const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+    let updatedPost;
+
+    if (!hasFileToUpdate) {
+      //Update post to database if it's a video
+      updatedPost = await databases.updateDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        post.postId,
+        {
+          caption: post.caption,
+          imageUrl: image.imageUrl,
+          imageId: image.imageId,
+          location: post.location,
+          tags: tags,
+          // isVideo: post.file[0].type.startsWith("video") ? true : false,
+        }
+      );
+    } else {
+      //Update post to database if it's not a video
+      updatedPost = await databases.updateDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        post.postId,
+        {
+          caption: post.caption,
+          imageUrl: image.imageUrl,
+          imageId: image.imageId,
+          location: post.location,
+          tags: tags,
+          isVideo: post.file[0].type.startsWith("video") ? true : false,
+        }
+      );
+    }
+
+    // console.log("post det:", updatedPost);
+    if (!updatedPost) {
+      await deleteFile(post.imageId);
+      throw Error;
+    }
+
+    return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deletePost(postId: string, imageId: string) {
+  if (!postId || !imageId) throw Error;
+
+  try {
+    await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      postId
+    );
+
+    return { status: "ok" };
   } catch (error) {
     console.log(error);
   }
