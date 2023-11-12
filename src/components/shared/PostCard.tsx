@@ -1,7 +1,7 @@
 import { useUserContext } from "@/context/AuthContext";
 import { getRelativeTime } from "@/lib/utils";
 import { Models } from "appwrite";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import PostStats from "./PostStats";
 
