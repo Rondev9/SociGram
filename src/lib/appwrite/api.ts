@@ -1,7 +1,6 @@
 import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
-import { useNavigate } from "react-router-dom";
 
 // let session: any;
 

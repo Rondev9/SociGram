@@ -24,7 +24,6 @@ import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "@/components/shared/Loader";
-import { act } from "react-dom/test-utils";
 
 type PostFormProps = {
   post?: Models.Document;

@@ -114,7 +114,7 @@ export const useDeleteSavedPost = () => {
 
   return useMutation({
     mutationFn: (savedRecordId: string) => deleteSavedPost(savedRecordId),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
       });
@@ -122,7 +122,7 @@ export const useDeleteSavedPost = () => {
         queryKey: [QUERY_KEYS.GET_POSTS],
       });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_CURRENT_USER, data?.$id],
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
     },
   });
