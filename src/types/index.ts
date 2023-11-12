@@ -1,3 +1,5 @@
+import { Models } from "appwrite";
+
 export type IContextType = {
   user: IUser;
   isLoading: boolean;
@@ -55,3 +57,8 @@ export type INewUser = {
   username: string;
   password: string;
 };
+
+export type Idata = {
+  data: Models.Document
+  $id: string
+}
