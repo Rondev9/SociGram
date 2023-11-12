@@ -17,7 +17,6 @@ import { z } from "zod";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  useCreateUserAccount,
   useSignInAccount,
 } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
@@ -27,7 +26,7 @@ const SigninForm = () => {
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
   const navigate = useNavigate();
 
-  const { mutateAsync: signInAccount, isPending } =
+  const { mutateAsync: signInAccount } =
     useSignInAccount();
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
