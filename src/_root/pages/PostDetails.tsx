@@ -118,6 +118,10 @@ const PostDetails = () => {
           </div>
         </div>
       )}
+      {/* <hr className="border w-80 border-dark-4/80 mb-0" /> */}
+      <div className="more_related_posts-card border-none">
+        <h2 className="h4-bold md:h3-bold">More related posts</h2>
+      </div>
     </div>
   );
 };
