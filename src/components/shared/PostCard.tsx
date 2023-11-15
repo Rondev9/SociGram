@@ -144,6 +144,7 @@ const PostCard = ({ post }: PostCardProps) => {
             loop={true}
             autoPlay={true}
             muted={true}
+            autoFocus={true}
           >
             <source src={modifiedVideoUrl} type="video/mp4" />
             Your browser does not support the video tag.
