@@ -95,9 +95,8 @@ export async function getCurrentUser() {
 export async function signOutAccount() {
   try {
     localStorage.clear();
-    //! try adding if(!session) and another method if got any error from deleting session try clearing out the local storage and navigate to sign-in
     const session = await account.deleteSession("current");
-    console.log("session from delete:", session);
+    // console.log("session from delete:", session);
     // localStorage.clear();
     return session;
   } catch (error) {
@@ -196,10 +195,10 @@ export async function deleteFile(fileId: string) {
   }
 }
 
-export async function getRecentPosts({pageParam} : {pageParam: number}) {
+export async function getRecentPosts({ pageParam }: { pageParam: number }) {
   const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(10)];
 
-  if(pageParam){
+  if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
   }
 
@@ -210,9 +209,9 @@ export async function getRecentPosts({pageParam} : {pageParam: number}) {
       // [Query.orderDesc("$createdAt"), Query.limit(20)]
       queries
     );
-  
+
     if (!posts) throw Error;
-  
+
     return posts;
   } catch (error) {
     console.log(error);
@@ -371,15 +370,19 @@ export async function updatePost(post: IUpdatePost) {
   }
 }
 
-export async function deletePost(postId: string, imageId: string) {
+export async function deletePost(postId?: string, imageId?: string) {
   if (!postId || !imageId) throw Error;
 
   try {
-    await databases.deleteDocument(
+    const statusCode = await databases.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       postId
     );
+
+    if (!statusCode) throw Error;
+
+    await deleteFile(imageId);
 
     return { status: "ok" };
   } catch (error) {
@@ -412,10 +415,42 @@ export async function searchPosts(searchTerm: string) {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
-      [Query.search('caption', searchTerm)]
+      [Query.search("caption", searchTerm)]
     );
     if (!posts) throw Error;
     return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserPosts(userId?: string) {
+  if (!userId) return;
+
+  try {
+    const post = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+    );
+
+    if (!post) throw Error;
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserById(userId: string) {
+  try {
+    const user = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    );
+    if (!user) throw Error;
+    return user;
   } catch (error) {
     console.log(error);
   }
