@@ -95,9 +95,8 @@ export async function getCurrentUser() {
 export async function signOutAccount() {
   try {
     localStorage.clear();
-    //! try adding if(!session) and another method if got any error from deleting session try clearing out the local storage and navigate to sign-in
     const session = await account.deleteSession("current");
-    console.log("session from delete:", session);
+    // console.log("session from delete:", session);
     // localStorage.clear();
     return session;
   } catch (error) {
@@ -438,6 +437,20 @@ export async function getUserPosts(userId?: string) {
     if (!post) throw Error;
 
     return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserById(userId: string) {
+  try {
+    const user = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    );
+    if (!user) throw Error;
+    return user;
   } catch (error) {
     console.log(error);
   }

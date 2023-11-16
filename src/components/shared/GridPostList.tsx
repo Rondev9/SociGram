@@ -26,7 +26,7 @@ const GridPostList = ({
                   post?.imageUrl.replace(/\/preview\?[^/]+/, "/view") +
                   "?project=654288d943ac85d3021e&mode=admin"
                 }
-                controls
+                controls={false}
                 muted
                 autoFocus
                 autoPlay
