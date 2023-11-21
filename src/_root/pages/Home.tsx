@@ -1,6 +1,10 @@
 import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
-import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutations";
+import UserCard from "@/components/shared/UserCard";
+import {
+  useGetRecentPosts,
+  useGetUsers,
+} from "@/lib/react-query/queriesAndMutations";
 import { Models } from "appwrite";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -11,9 +15,29 @@ const Home = () => {
   const {
     data: posts,
     isPending: isPostLoading,
+    isError: isErrorPosts,
     fetchNextPage,
     hasNextPage,
   } = useGetRecentPosts();
+
+  const {
+    data: creators,
+    isLoading: isCreatorLoading,
+    isError: isErrorCreators,
+  } = useGetUsers(10);
+
+  if (isErrorCreators || isErrorPosts) {
+    return (
+      <div className="flex flex-1">
+        <div className="home-container">
+          <p className="body-medium text-light-1">Something bad happened</p>
+        </div>
+        <div className="home-creators">
+          <p className="body-medium text-light-1">Something bad happened</p>
+        </div>
+      </div>
+    );
+  }
 
   // console.log("data",posts?.pages[0]?.documents);
 
@@ -44,6 +68,21 @@ const Home = () => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="home-creators">
+        <h3 className="h3-bold text-light-1">Top Creators</h3>
+        {isCreatorLoading && !creators ? (
+          <Loader />
+        ) : (
+          <ul className="flex flex-col flex-1 gap-9 w-full">
+            {creators?.documents.map((creator) => (
+              <li key={creator?.$id}>
+                <UserCard user={creator} />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
